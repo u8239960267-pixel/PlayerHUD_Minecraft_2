@@ -6,4 +6,11 @@ pluginManagement {
     }
 }
 
+dependencyResolutionManagement {
+    repositories {
+        maven { url = "https://fabricmc.net" }
+        mavenCentral()
+    }
+}
+
 rootProject.name = 'playerhud'
