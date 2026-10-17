@@ -21,16 +21,20 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Set up Gradle
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.14.3'
-          # WSKAZANIE WŁAŚCIWEGO FOLDERU Z PLIKAMI MODA:
-          build-root-directory: PlayerHUD_Fabric_1.21.11
 
-      - name: Build mod
-        # Uruchomienie komendy bezpośrednio w podfolderze projektu
-        run: cd PlayerHUD_Fabric_1.21.11 && gradle build --no-daemon
+      - name: Build Mod
+        run: |
+          cd PlayerHUD_Fabric_1.21.11
+          
+          # Jeśli w folderze nie ma pliku startowego gradlew, wygeneruj go w wersji 8.9
+          if [ ! -f "gradlew" ]; then
+            gradle wrapper --gradle-version=8.9
+          fi
+          
+          chmod +x gradlew
+          ./gradlew build --no-daemon
 
       - name: Upload JAR
         uses: actions/upload-artifact@v4
