@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.13.6'
+    id 'fabric-loom' version '1.9.2'
     id 'maven-publish'
 }
 
@@ -8,6 +8,15 @@ group = project.maven_group
 
 base {
     archivesName = project.archives_base_name
+}
+
+// Rozwiązanie problemów z unpick na wersji 1.21.11
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'net.fabricmc' && details.requested.name == 'unpick') {
+            details.useVersion '2.1.2'
+        }
+    }
 }
 
 repositories {
@@ -42,10 +51,4 @@ java {
     withSourcesJar()
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
-}
-
-jar {
-    from("LICENSE") {
-        rename { "${it}_${project.base.archivesName.get()}"}
-    }
 }
