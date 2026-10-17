@@ -1,40 +1,45 @@
-
-name: Build PlayerHUD 1.21.11
+name: Build Minecraft Mod
 
 on:
   push:
+    branches: [ "main", "master" ]
   pull_request:
-  workflow_dispatch:
-
-permissions:
-  contents: read
+    branches: [ "main", "master" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Pobierz kod
-        uses: actions/checkout@v4
+    - name: Checkout Repository
+      uses: actions/checkout@v4
 
-      - name: Skonfiguruj Java 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: "21"
-          cache: gradle
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
 
-      - name: Zainstaluj Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: "8.14.3"
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
 
-      - name: Zbuduj moda
-        run: gradle build --no-daemon
+    - name: Find and Build Mod
+      run: |
+        # Znajduje folder zawierający plik settings.gradle
+        TARGET_DIR=$(find . -name "settings.gradle" -exec dirname {} \;)
+        echo "Znaleziono katalog projektu: $TARGET_DIR"
+        cd "$TARGET_DIR"
+        
+        # Jeśli gradlew nie istnieje, generuje go automatycznie za pomocą systemowego gradle
+        if [ ! -f "gradlew" ]; then
+          gradle wrapper
+        fi
+        
+        chmod +x gradlew
+        ./gradlew build --no-daemon
 
-      - name: Udostępnij plik JAR
-        uses: actions/upload-artifact@v4
-        with:
-          name: PlayerHUD-Fabric-1.21.11
-          path: build/libs/*.jar
-          if-no-files-found: error
+    - name: Upload Mod Artifacts (.jar)
+      uses: actions/upload-artifact@v4
+      with:
+        name: production-libs
+        path: "**/build/libs/*.jar"
