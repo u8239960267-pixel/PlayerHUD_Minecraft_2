@@ -10,7 +10,7 @@ base {
     archivesName = project.archives_base_name
 }
 
-// Blok rozwiązujący problem "Unsupported unpick version" dla 1.21.11
+// Bezpieczne nadpisanie wersji narzędzia unpick, aby uniknąć crashu na Loom 1.9.2
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
         if (details.requested.group == 'net.fabricmc' && details.requested.name == 'unpick') {
