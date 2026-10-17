@@ -10,7 +10,6 @@ base {
     archivesName = project.archives_base_name
 }
 
-// Rozwiązanie problemów z unpick na wersji 1.21.11
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
         if (details.requested.group == 'net.fabricmc' && details.requested.name == 'unpick') {
