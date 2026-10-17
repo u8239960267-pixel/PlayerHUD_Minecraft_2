@@ -26,12 +26,11 @@ jobs:
 
       - name: Build Mod
         run: |
+          # Wejście bezpośrednio do prawidłowego folderu projektu
           cd PlayerHUD_Fabric_1.21.11
           
-          # Jeśli w folderze nie ma pliku startowego gradlew, wygeneruj go w wersji 8.9
-          if [ ! -f "gradlew" ]; then
-            gradle wrapper --gradle-version=8.9
-          fi
+          # Generowanie poprawnego środowiska startowego Gradle 8.9
+          gradle wrapper --gradle-version=8.9
           
           chmod +x gradlew
           ./gradlew build --no-daemon
